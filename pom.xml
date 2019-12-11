@@ -64,6 +64,8 @@
 
     <build>
         <plugins>
+
+            <!--maven 默认打包插件，用来创建 project jar-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -76,6 +78,10 @@
                         <exclude>**/*.properties</exclude>
                         <exclude>**/*.yml</exclude>
                     </excludes>
+                    <!--默认情况下，通过mvn package生成的jar包中因为没有指定Main-Class属性，
+                    因此并不能使用-jar配置直接运行。
+                    加上<archive>元素(maven-archive)配置Main-Class
+                    -->
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
@@ -85,6 +91,8 @@
                     </archive>
                 </configuration>
             </plugin>
+
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -104,6 +112,8 @@
                     </execution>
                 </executions>
             </plugin>
+
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -119,11 +129,13 @@
                 </configuration>
             </plugin>
 
+            <!--支持定制化打包方式，例如 apache 项目的打包方式-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
+                        <!--绑定的阶段为package，主要的插件目标就是assembly:single-->
                         <id>make-assembly</id>
                         <phase>package</phase>
                         <goals>
@@ -134,6 +146,7 @@
                 <configuration>
                     <finalName>${project.artifactId}</finalName>
                     <descriptors>
+                        <!--文件在根目录下-->
                         <descriptor>assembly.xml</descriptor>
                     </descriptors>
                 </configuration>
